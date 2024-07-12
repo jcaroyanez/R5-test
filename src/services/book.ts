@@ -13,3 +13,8 @@ export const getBookStore = async (title: string) => {
 	const response = await axios.get(`https://openlibrary.org/search.json?q=${q}&limit=10`);
 	return mapBookStore(response.data?.docs);
 }
+
+export const getDetailBook = async (id: string) => {
+	const response = await axios.get(`https://openlibrary.org/works/${id}.json`);
+	return response;
+}

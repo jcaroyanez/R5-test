@@ -1,5 +1,4 @@
 import React from 'react'
-import './books.css'
 import { Book as BookType } from '../../definitions/models/book'
 import Book from '../Book';
 

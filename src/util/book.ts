@@ -11,13 +11,12 @@ export const mapBook = (books: BookReponse[]) => {
 }
 
 export const mapBookStore = (books: any[]) => {
-	console.log({ books });
 	return books?.map((item) => {
-		const id = item?.edition_key[0];
+		const id = `${item.key.replace('/works/', '')}-${item?.edition_key[0]}`;
 		return {
 			id,
-			title: item.title,
-			imgSrc: `https://covers.openlibrary.org/b/OLID/${id}-L.jpg`
+			title: item?.title,
+			imgSrc: `https://covers.openlibrary.org/b/OLID/${item?.edition_key[0]}-L.jpg`,
 		}
 	})
 }

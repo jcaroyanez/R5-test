@@ -106,3 +106,13 @@ export type Book = {
   title: string;
   imgSrc: string;
 }
+
+export interface DescriptionObject {
+	value: string;
+	type: string;
+}
+
+export interface BookDetail {
+	title: string;
+	description: string | DescriptionObject;
+}
