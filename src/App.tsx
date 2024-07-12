@@ -1,23 +1,12 @@
-import React from 'react'
-import SearchInput from './components/SearchInput'
-import {BookType} from './components/Book'
-import Books from './components/Books'
+import { Suspense } from "react"
+import { Outlet } from "react-router"
 
-interface Response {
-  data?: {
-    items: BookType[]
-  }
+export const App = () => {
+	return (
+		<div>
+			<Suspense fallback={<p>Loading...</p>}>
+				<Outlet />
+			</Suspense>
+		</div>
+	)
 }
-
-const App = () =>  {
-  const [response, setResponse] = React.useState<Response>({})
-  return (
-    <div>
-      <SearchInput setResponse={setResponse} />
-	{response.data && <Books books={response.data.items} /> }
-    </div>
-  )
-}
-
-
-export default App

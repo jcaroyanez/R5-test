@@ -1,38 +1,40 @@
-import React, {ChangeEvent} from 'react'
-import axios from 'axios'
+import { useState } from 'react'
 import './SearchInput.css'
 
 interface SearchInputProps {
-  setResponse: Function
+	title: string;
+  onSetText: (text: string) => void;
 }
 
-const SearchInput = ({setResponse}: SearchInputProps) => {
-  const [searchValue, setSearchValue] = React.useState('')
+const CODE_ENTER = 'Enter';
 
-  function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
-    setSearchValue(event.target.value)
+const SearchInput = ({ title, onSetText }: SearchInputProps) => {
+  const [searchValue, setSearchValue] = useState('')
+
+  const handleInputChange = (value: string) => {
+    setSearchValue(value);
   }
 
-  function getBooks(title: string = 'javascript') {
-    axios.get(`https://www.googleapis.com/books/v1/volumes?q=${title}`)
-      .then((response) => setResponse(response))
-  }
-
-  React.useEffect(() => {
-    getBooks()
-  }, [])
+	const handleKeyUp = (value: string) => {
+		setSearchValue(value);
+		onSetText(value);
+	}
 
   return (
     <div className="search">
-      <h1>GOOGLE BOOKS</h1>
+      <h1>{title}</h1>
       <input
-	className="search-input"
-	type="text"
-	placeholder="Buscar un libro"
-	value={searchValue}
-	onChange={handleInputChange}
-      />
-      <button className="search-button" onClick={() => getBooks(searchValue)}>Buscar</button>
+				className="search-input"
+				type="text"
+				placeholder="Buscar un libro"
+				value={searchValue}
+				onKeyUp={(event) => {
+					if(event.key === CODE_ENTER) {
+						handleKeyUp((event.target as HTMLInputElement).value);
+					}
+				}}
+				onChange={(event) => handleInputChange(event.target.value)} />
+      <button className="search-button" onClick={() => onSetText(searchValue)}>Buscar</button>
     </div>
   )
 }
