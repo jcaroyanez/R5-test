@@ -1,5 +1,6 @@
 const axiosMock = {
-  get: jest.fn().mockResolvedValue({ data: {} }),
+  get: jest.fn(() => Promise.resolve({ data: {} })),
+  post: jest.fn(() => Promise.resolve({ data: {} })),
 };
 
 export default axiosMock;
