@@ -1,54 +1,32 @@
-import React from 'react'
-import {render, waitFor, fireEvent, screen} from '@testing-library/react'
-import axiosMock from 'axios'
-import SearchInput from './'
+import {render, fireEvent, screen} from '@testing-library/react';
+import SearchInput from './';
 
-const book = {
-  id: 'SqikDwAAQBAJ',
-  volumeInfo: {
-    title: 'JavaScript - Aprende a programar en el lenguaje de la web',
-    authors: ["Fernando Luna"],
-    publishedDate: "2019-07-23",
-    imageLinks: {
-      "smallThumbnail": "http://books.google.com/books/content?id=SqikDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-      "thumbnail": "http://books.google.com/books/content?id=SqikDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
-    },
-  }
-}
+describe('SearchInput component test suite', () => {
+	it('should render component render correct title', () => {
+		const title = 'test title';
+		const onSearch = jest.fn();
 
-test('SearchInput: Should get books when SearchInput is mounted' ,async () => {
-  const setResponse = jest.fn()
-  const books = {items: [book]}
-  const response = {data: books}
-  axiosMock.get.mockResolvedValue(response)
+		render(<SearchInput title={title} onSetText={onSearch} />);
 
-  render(<SearchInput setResponse={setResponse} />)
-  await waitFor(() => {
-    expect(setResponse).toBeCalledWith(response)
-  })
+		const titleElement  = screen.getByText(/test title/);
 
-})
+		expect(titleElement).toBeInTheDocument();
+	});
 
+	it('shoould typing and pressing the button then call fuction for set value', () => {
+		const title = 'test title';
 
-test('SearchInput: Should get books when click on Buscar', async () => {
-  const setResponse = jest.fn()
-  const books = {items: [book]}
-  const response = {data: books}
-  axiosMock.get.mockResolvedValue(response)
+		const onSearch = jest.fn();
 
-  render(<SearchInput setResponse={setResponse} />)
-  await waitFor(() => {
-    expect(setResponse).toBeCalledWith(response)
-  })
+		render(<SearchInput title={title} onSetText={onSearch} />);
 
-  fireEvent.change(screen.getByPlaceholderText(/Buscar/i),
-    { target: { value: 'javascript' } }
-  )
+		const button = screen.getByText('Buscar');
+		const input = screen.getByPlaceholderText(/Buscar/i);
 
-  fireEvent.click(screen.getByText('Buscar'))
+		fireEvent.change(input, { target: { value: 'javascript' } });
+		fireEvent.click(button);
 
-  await waitFor(() => {
-    expect(setResponse).toBeCalledTimes(2)
-  })
-
-})
+		expect(onSearch).toBeCalled();
+		expect(onSearch).toHaveBeenCalledWith('javascript');
+	});
+});
